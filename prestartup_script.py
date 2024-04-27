@@ -7,6 +7,7 @@ import threading
 import re
 import locale
 import platform
+from security import safe_command
 
 
 sys.CM_api = {}
@@ -84,7 +85,7 @@ def handle_stream(stream, prefix):
 
 
 def process_wrap(cmd_str, cwd_path, handler=None):
-    process = subprocess.Popen(cmd_str, cwd=cwd_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, bufsize=1)
+    process = safe_command.run(subprocess.Popen, cmd_str, cwd=cwd_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, bufsize=1)
 
     if handler is None:
         handler = handle_stream
