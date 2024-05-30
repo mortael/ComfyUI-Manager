@@ -296,7 +296,7 @@ def gen_json(node_info):
             nodes.sort()
             data[git_url] = (nodes, metadata_in_url)
 
-    json_path = f"extension-node-map.json"
+    json_path = "extension-node-map.json"
     with open(json_path, "w", encoding='utf-8') as file:
         json.dump(data, file, indent=4, sort_keys=True)
 

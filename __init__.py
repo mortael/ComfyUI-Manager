@@ -71,22 +71,22 @@ except:
     my_path = os.path.dirname(__file__)
     requirements_path = os.path.join(my_path, "requirements.txt")
 
-    print(f"## ComfyUI-Manager: installing dependencies")
+    print("## ComfyUI-Manager: installing dependencies")
 
     run_script([sys.executable, '-s', '-m', 'pip', 'install', '-r', requirements_path])
 
     try:
         import git
     except:
-        print(f"## [ERROR] ComfyUI-Manager: Attempting to reinstall dependencies using an alternative method.")
+        print("## [ERROR] ComfyUI-Manager: Attempting to reinstall dependencies using an alternative method.")
         run_script([sys.executable, '-s', '-m', 'pip', 'install', '--user', '-r', requirements_path])
 
         try:
             import git
         except:
-            print(f"## [ERROR] ComfyUI-Manager: Failed to install the GitPython package in the correct Python environment. Please install it manually in the appropriate environment. (You can seek help at https://app.element.io/#/room/%23comfyui_space%3Amatrix.org)")
+            print("## [ERROR] ComfyUI-Manager: Failed to install the GitPython package in the correct Python environment. Please install it manually in the appropriate environment. (You can seek help at https://app.element.io/#/room/%23comfyui_space%3Amatrix.org)")
 
-    print(f"## ComfyUI-Manager: installing dependencies done.")
+    print("## ComfyUI-Manager: installing dependencies done.")
 
 
 from git.remote import RemoteProgress
@@ -260,7 +260,7 @@ def try_install_script(url, repo_path, install_cmd):
                 if int(comfy_ui_revision) < comfy_ui_required_revision:
                     print("\n\n###################################################################")
                     print(f"[WARN] ComfyUI-Manager: Your ComfyUI version ({comfy_ui_revision}) is too old. Please update to the latest version.")
-                    print(f"[WARN] The extension installation feature may not work properly in the current installed ComfyUI version on Windows environment.")
+                    print("[WARN] The extension installation feature may not work properly in the current installed ComfyUI version on Windows environment.")
                     print("###################################################################\n\n")
             except:
                 pass
@@ -325,13 +325,13 @@ def __win_check_git_update(path, do_fetch=False, do_update=False):
             output, _ = process.communicate()
             output = output.decode('utf-8').strip()
         except Exception as e:
-            print(f'[ComfyUI-Manager] failed to fixing')
+            print('[ComfyUI-Manager] failed to fixing')
 
         if 'detected dubious' in output:
-            print(f'\n[ComfyUI-Manager] Failed to fixing repository setup. Please execute this command on cmd: \n'
-                  f'-----------------------------------------------------------------------------------------\n'
+            print('\n[ComfyUI-Manager] Failed to fixing repository setup. Please execute this command on cmd: \n'
+                  '-----------------------------------------------------------------------------------------\n'
                   f'git config --global --add safe.directory "{path}"\n'
-                  f'-----------------------------------------------------------------------------------------\n')
+                  '-----------------------------------------------------------------------------------------\n')
 
     if do_update:
         if "CUSTOM NODE PULL: True" in output:
@@ -491,7 +491,7 @@ def setup_js():
         if os.path.exists(js_dest_path):
             shutil.rmtree(js_dest_path)
     else:
-        print(f"[WARN] ComfyUI-Manager: Your ComfyUI version is outdated. Please update to the latest version.")
+        print("[WARN] ComfyUI-Manager: Your ComfyUI version is outdated. Please update to the latest version.")
         # setup js
         if not os.path.exists(js_dest_path):
             os.makedirs(js_dest_path)
@@ -689,15 +689,15 @@ def check_custom_nodes_installed(json_obj, do_fetch=False, do_update_check=True,
             executor.submit(process_custom_node, item)
 
     if do_fetch:
-        print(f"\x1b[2K\rFetching done.")
+        print("\x1b[2K\rFetching done.")
     elif do_update:
         update_exists = any(item['installed'] == 'Update' for item in json_obj['custom_nodes'])
         if update_exists:
-            print(f"\x1b[2K\rUpdate done.")
+            print("\x1b[2K\rUpdate done.")
         else:
-            print(f"\x1b[2K\rAll extensions are already up-to-date.")
+            print("\x1b[2K\rAll extensions are already up-to-date.")
     elif do_update_check:
-        print(f"\x1b[2K\rUpdate check done.")
+        print("\x1b[2K\rUpdate check done.")
 
 
 @server.PromptServer.instance.routes.get("/customnode/getmappings")
@@ -958,7 +958,7 @@ def get_current_snapshot():
     repo_path = os.path.dirname(folder_paths.__file__)
 
     if not os.path.exists(os.path.join(repo_path, '.git')):
-        print(f"ComfyUI update fail: The installed ComfyUI does not have a Git repository.")
+        print("ComfyUI update fail: The installed ComfyUI does not have a Git repository.")
         return web.Response(status=400)
 
     repo = git.Repo(repo_path)
@@ -1180,7 +1180,7 @@ def execute_install_script(url, repo_path, lazy_mode=False):
                             try_install_script(url, repo_path, install_cmd)
 
         if os.path.exists(install_script_path):
-            print(f"Install: install script")
+            print("Install: install script")
             install_cmd = [sys.executable, "install.py"]
             try_install_script(url, repo_path, install_cmd)
 
@@ -1417,7 +1417,7 @@ async def install_custom_node(request):
             try_install_script(json_data['files'][0], ".", install_cmd)
 
     if res:
-        print(f"After restarting ComfyUI, please refresh the browser.")
+        print("After restarting ComfyUI, please refresh the browser.")
         return web.json_response({}, content_type='application/json')
 
     return web.Response(status=400)
@@ -1431,7 +1431,7 @@ async def install_custom_node_git_url(request):
         res = gitclone_install([url])
 
     if res:
-        print(f"After restarting ComfyUI, please refresh the browser.")
+        print("After restarting ComfyUI, please refresh the browser.")
         return web.Response(status=200)
 
     return web.Response(status=400)
@@ -1465,7 +1465,7 @@ async def uninstall_custom_node(request):
         res = gitclone_uninstall(json_data['files'])
 
     if res:
-        print(f"After restarting ComfyUI, please refresh the browser.")
+        print("After restarting ComfyUI, please refresh the browser.")
         return web.json_response({}, content_type='application/json')
 
     return web.Response(status=400)
@@ -1485,7 +1485,7 @@ async def update_custom_node(request):
         res = gitclone_update(json_data['files'])
 
     if res:
-        print(f"After restarting ComfyUI, please refresh the browser.")
+        print("After restarting ComfyUI, please refresh the browser.")
         return web.json_response({}, content_type='application/json')
 
     return web.Response(status=400)
@@ -1493,13 +1493,13 @@ async def update_custom_node(request):
 
 @server.PromptServer.instance.routes.get("/comfyui_manager/update_comfyui")
 async def update_comfyui(request):
-    print(f"Update ComfyUI")
+    print("Update ComfyUI")
 
     try:
         repo_path = os.path.dirname(folder_paths.__file__)
 
         if not os.path.exists(os.path.join(repo_path, '.git')):
-            print(f"ComfyUI update fail: The installed ComfyUI does not have a Git repository.")
+            print("ComfyUI update fail: The installed ComfyUI does not have a Git repository.")
             return web.Response(status=400)
 
         # version check
@@ -1518,15 +1518,15 @@ async def update_comfyui(request):
             remote.fetch()
         except Exception as e:
             if 'detected dubious' in e:
-                print(f"[ComfyUI-Manager] Try fixing 'dubious repository' error on 'ComfyUI' repository")
+                print("[ComfyUI-Manager] Try fixing 'dubious repository' error on 'ComfyUI' repository")
                 subprocess.run(['git', 'config', '--global', '--add', 'safe.directory', comfy_path])
                 try:
                     remote.fetch()
                 except Exception:
-                    print(f"\n[ComfyUI-Manager] Failed to fixing repository setup. Please execute this command on cmd: \n"
-                          f"-----------------------------------------------------------------------------------------\n"
+                    print("\n[ComfyUI-Manager] Failed to fixing repository setup. Please execute this command on cmd: \n"
+                          "-----------------------------------------------------------------------------------------\n"
                           f'git config --global --add safe.directory "{comfy_path}"\n'
-                          f"-----------------------------------------------------------------------------------------\n")
+                          "-----------------------------------------------------------------------------------------\n")
 
         commit_hash = repo.head.commit.hexsha
         remote_commit_hash = repo.refs[f'{remote_name}/{branch_name}'].object.hexsha
@@ -1690,7 +1690,7 @@ async def get_notice(request):
 
                 try:
                     if required_comfyui_revision > int(comfy_ui_revision):
-                        markdown_content = f'<P style="text-align: center; color:red; background-color:white; font-weight:bold">Your ComfyUI is too OUTDATED!!!</P>' + markdown_content
+                        markdown_content = '<P style="text-align: center; color:red; background-color:white; font-weight:bold">Your ComfyUI is too OUTDATED!!!</P>' + markdown_content
                 except:
                     pass
 

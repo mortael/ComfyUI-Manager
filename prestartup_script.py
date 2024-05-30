@@ -250,7 +250,7 @@ def check_bypass_ssl():
         default_conf = config['default']
 
         if 'bypass_ssl' in default_conf and default_conf['bypass_ssl'].lower() == 'true':
-            print(f"[ComfyUI-Manager] WARN: Unsafe - SSL verification bypass option is Enabled. (see ComfyUI-Manager/config.ini)")
+            print("[ComfyUI-Manager] WARN: Unsafe - SSL verification bypass option is Enabled. (see ComfyUI-Manager/config.ini)")
             ssl._create_default_https_context = ssl._create_unverified_context  # SSL certificate error fix.
     except Exception:
         pass
@@ -273,7 +273,7 @@ def get_installed_packages():
             result = subprocess.check_output([sys.executable, '-m', 'pip', 'list'], universal_newlines=True)
             pip_list = set([line.split()[0].lower() for line in result.split('\n') if line.strip()])
         except subprocess.CalledProcessError as e:
-            print(f"[ComfyUI-Manager] Failed to retrieve the information of installed pip packages.")
+            print("[ComfyUI-Manager] Failed to retrieve the information of installed pip packages.")
             return set()
     
     return pip_list
@@ -321,7 +321,7 @@ if os.path.exists(restore_snapshot_path):
                     else:
                         print(prefix, msg, end="")
 
-        print(f"[ComfyUI-Manager] Restore snapshot.")
+        print("[ComfyUI-Manager] Restore snapshot.")
         cmd_str = [sys.executable, git_script_path, '--apply-snapshot', restore_snapshot_path]
         exit_code = process_wrap(cmd_str, custom_nodes_path, handler=msg_capture)
 
@@ -360,13 +360,13 @@ if os.path.exists(restore_snapshot_path):
                     print(f"[ComfyUI-Manager] Restoring '{repository_name}' is failed.")
 
         if exit_code != 0:
-            print(f"[ComfyUI-Manager] Restore snapshot failed.")
+            print("[ComfyUI-Manager] Restore snapshot failed.")
         else:
-            print(f"[ComfyUI-Manager] Restore snapshot done.")
+            print("[ComfyUI-Manager] Restore snapshot done.")
 
     except Exception as e:
         print(e)
-        print(f"[ComfyUI-Manager] Restore snapshot failed.")
+        print("[ComfyUI-Manager] Restore snapshot failed.")
 
     os.remove(restore_snapshot_path)
 
