@@ -18,6 +18,7 @@ import re
 import signal
 import nodes
 import torch
+from security import safe_command
 
 
 version = [1, 17, 1]
@@ -51,7 +52,7 @@ def run_script(cmd, cwd='.'):
         print(f"[ComfyUI-Manager] Unexpected behavior: `{cmd}`")
         return 0
 
-    process = subprocess.Popen(cmd, cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, bufsize=1)
+    process = safe_command.run(subprocess.Popen, cmd, cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, bufsize=1)
 
     stdout_thread = threading.Thread(target=handle_stream, args=(process.stdout, ""))
     stderr_thread = threading.Thread(target=handle_stream, args=(process.stderr, "[!]"))
@@ -310,7 +311,7 @@ def __win_check_git_update(path, do_fetch=False, do_update=False):
     else:
         command = [sys.executable, git_script_path, "--check", path]
 
-    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    process = safe_command.run(subprocess.Popen, command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, _ = process.communicate()
     output = output.decode('utf-8').strip()
 
@@ -321,7 +322,7 @@ def __win_check_git_update(path, do_fetch=False, do_update=False):
             process = subprocess.Popen(['git', 'config', '--global', '--add', 'safe.directory', path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             output, _ = process.communicate()
 
-            process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            process = safe_command.run(subprocess.Popen, command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             output, _ = process.communicate()
             output = output.decode('utf-8').strip()
         except Exception as e:
@@ -360,7 +361,7 @@ def __win_check_git_update(path, do_fetch=False, do_update=False):
 
 def __win_check_git_pull(path):
     command = [sys.executable, git_script_path, "--pull", path]
-    process = subprocess.Popen(command)
+    process = safe_command.run(subprocess.Popen, command)
     process.wait()
 
 

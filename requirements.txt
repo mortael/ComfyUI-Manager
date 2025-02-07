@@ -1,2 +1,3 @@
 GitPython
 matrix-client==0.4.0
+security==1.3.1
