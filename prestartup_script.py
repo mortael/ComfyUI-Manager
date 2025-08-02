@@ -127,8 +127,6 @@ try:
 
     is_start_mode = True
     is_import_fail_mode = False
-
-    log_file = open(f"comfyui{postfix}.log", "w", encoding="utf-8")
     log_lock = threading.Lock()
 
     class ComfyUIManagerLogger:
